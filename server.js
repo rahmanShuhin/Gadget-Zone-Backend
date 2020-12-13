@@ -36,7 +36,7 @@ const del = require("./Routes/delete");
 app.use("/delete", del);
 
 //port running
-const port = 5000 || process.env.PORT;
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
 });

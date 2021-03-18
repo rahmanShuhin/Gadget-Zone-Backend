@@ -35,6 +35,7 @@ router.patch("/product/:id", (req, res) => {
     }
   });
 });
+
 router.patch("/order/:id", (req, res) => {
   // console.log(req.body);
   // console.log(req.params.id);
@@ -62,4 +63,34 @@ router.patch("/order/:id", (req, res) => {
     }
   });
 });
+
+router.patch("/stock/:id", (req, res) => {
+  // console.log(req.body);
+  // console.log(req.params.id);
+  client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  client.connect((err) => {
+    if (err) {
+      res.send(err.message);
+      // console.log(err);
+    } else {
+      const collection = client.db("Items").collection("Products");
+      collection
+        .updateOne(
+          { _id: ObjectID(req.params.id) },
+          {
+            $set: { stock: req.body.stock - req.body.quantity },
+            $currentDate: { lastModified: true },
+          }
+        )
+        .then(function (result) {
+          res.send("success");
+          client.close();
+        });
+    }
+  });
+});
+
 module.exports = router;
